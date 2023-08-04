@@ -5,8 +5,10 @@ type Props = {};
 
 export default function ClientComponents({
   children,
+  className,
 }: {
   children: React.ReactNode;
+  className?: string;
 }) {
-  return <div>{children}</div>;
+  return <div className={className}>{children}</div>;
 }

@@ -64,7 +64,7 @@ export const authOptions: NextAuthOptions = {
         id: dbUser.id,
         name: dbUser.name,
         email: dbUser.email,
-        image: dbUser.image,
+        picture: dbUser.image,
       };
     },
     async session({ session, token }) {
@@ -72,8 +72,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
-        //@ts-ignore
-        session.user.image = token.image;
+        session.user.image = token.picture;
       }
 
       return session;
