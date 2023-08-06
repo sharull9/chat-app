@@ -6,7 +6,6 @@ import { FcGoogle } from "react-icons/fc";
 import { AiOutlineGithub } from "react-icons/ai";
 import { Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { toast } from "react-hot-toast";
 import {
   Card,
   CardContent,
@@ -15,19 +14,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useToast } from "@/components/ui/use-toast";
 
 type Props = {};
 
 export default function page({}: Props) {
+  const { toast } = useToast();
   const [isLoadingGoogle, setIsLoadingGoogle] = useState<boolean>(false);
   const [isLoadingGithub, setIsLoadingGithub] = useState<boolean>(false);
   async function loginGoogle() {
     try {
       setIsLoadingGoogle(true);
       await signIn("google");
-      toast.success("Logged in successfully");
+      toast({
+        description: "Loggin in.....",
+      });
     } catch (e) {
-      toast.error("failed");
+      toast({
+        variant: "destructive",
+        description: "Failed...",
+      });
     } finally {
       setIsLoadingGoogle(false);
     }
@@ -36,9 +42,14 @@ export default function page({}: Props) {
     try {
       setIsLoadingGithub(true);
       await signIn("github");
-      toast.success("Logged in successfully");
+      toast({
+        description: "Loggin in.....",
+      });
     } catch (e) {
-      toast.error("failed");
+      toast({
+        variant: "destructive",
+        description: "Failed...",
+      });
     } finally {
       setIsLoadingGithub(false);
     }

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   DropdownMenu,
@@ -9,20 +10,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { RxAvatar } from "react-icons/rx";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { signIn, signOut } from "next-auth/react";
+import { Session } from "next-auth";
 
-type Props = {};
+type Props = { session: Session | null };
 
-export default async function Header({}: Props) {
-  const session = await getServerSession(authOptions);
-
+export default function UserMenu({ session }: Props) {
   return (
-    <nav>
-      <div>Header</div>
-      <div></div>
-      <div></div>
-      <div></div>
+    <div>
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar>
@@ -36,11 +31,10 @@ export default async function Header({}: Props) {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuItem>Team</DropdownMenuItem>
-          <DropdownMenuItem>Subscription</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => signIn()}>Login</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    </nav>
+    </div>
   );
 }
