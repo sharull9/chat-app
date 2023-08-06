@@ -1,6 +1,8 @@
+import FriendList from "@/components/friend-list";
 import FriendRequestsOptions from "@/components/friend-requests";
 import { Icon, Icons } from "@/components/icons";
 import ProfileDetails from "@/components/profile-details";
+import { getFriendsByUserId } from "@/helpers/get-friends-by-user-id";
 import { fetchRedis } from "@/helpers/redis";
 import { authOptions } from "@/lib/auth";
 import { User, getServerSession } from "next-auth";
@@ -39,24 +41,31 @@ export default async function RootLayout({
     )) as User[]
   ).length;
   if (!session) notFound();
+
+  const friends = await getFriendsByUserId(session.user.id);
+
   return (
     <div className="w-full flex h-screen">
       <div className="flex h-full w-full max-w-sm grow flex-col gap-y-5 p-5 overflow-x-hidden overflow-y-auto border-r border-gray-200">
         <Link href={"/dashboard"}>SHARULL</Link>
-        <div className="text-xs font-semibold leading-6 text-gray-400">
-          Your Chats
-        </div>
+        {friends.length > 0 ? (
+          <div className="text-xs font-semibold leading-6 text-gray-400">
+            Your Chats
+          </div>
+        ) : (
+          ""
+        )}
+
         <nav className="flex flex-1 flex-col">
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
-            <li></li>
+            <li>
+              <FriendList sessionId={session.user.id} friends={friends} />
+            </li>
             <li>
               <div className="text-xs font-semibold leading-6 text-gray-400">
                 Overview
               </div>
-              <ul
-                role="list"
-                className="-mx-2 mt-2 space-y-1 flex flex-1 flex-col gap-y-7"
-              >
+              <ul role="list" className="-mx-2 mt-2 space-y-1">
                 {sidebarOptions.map((option) => {
                   const Icon = Icons[option.Icon];
                   return (
@@ -73,13 +82,11 @@ export default async function RootLayout({
                     </li>
                   );
                 })}
+                <FriendRequestsOptions
+                  sessionId={session.user.id}
+                  initialRequestCount={initialRequestCount}
+                />
               </ul>
-            </li>
-            <li className="-mx-2">
-              <FriendRequestsOptions
-                sessionId={session.user.id}
-                initialRequestCount={initialRequestCount}
-              />
             </li>
             <li className="-mx-6 mt-auto flex items-center">
               <div className="flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6">

@@ -4,6 +4,8 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "./ui/button";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type FriendRequestsOptionsProps = {
   initialRequestCount: number;
@@ -44,9 +46,28 @@ export function FriendsRequest({
   incomingFriendRequest,
   sessionId,
 }: FriendsRequestProps) {
+  const router = useRouter();
+
   const [friendRequest, setFriendRequest] = useState<IncomingFriendRequest[]>(
     incomingFriendRequest
   );
+
+  const acceptFriend = async (senderId: string) => {
+    await axios.post("/api/friends/accept", {
+      id: senderId,
+    });
+
+    setFriendRequest((prev) => prev.filter((req) => req.senderId !== senderId));
+    router.refresh();
+  };
+  const denyFriend = async (senderId: string) => {
+    await axios.post("/api/friends/deny", {
+      id: senderId,
+    });
+
+    setFriendRequest((prev) => prev.filter((req) => req.senderId !== senderId));
+    router.refresh();
+  };
 
   return (
     <>
@@ -63,6 +84,7 @@ export function FriendsRequest({
                 className="grid place-items-center w-8 h-8 transition-all hover:shadow-md"
                 variant="outline"
                 size="icon"
+                onClick={() => acceptFriend(request.senderId)}
               >
                 <Check className="font-semibold w-3/4 h-3/4" />
               </Button>
@@ -71,6 +93,7 @@ export function FriendsRequest({
                 className="grid place-items-center w-8 h-8 transition-all hover:shadow-md"
                 variant="destructive"
                 size="icon"
+                onClick={() => denyFriend(request.senderId)}
               >
                 <X className="font-semibold w-3/4 h-3/4" />
               </Button>
