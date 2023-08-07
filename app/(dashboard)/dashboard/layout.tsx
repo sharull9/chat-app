@@ -102,7 +102,7 @@ export default async function RootLayout({
                 <span className="sr-only">Your Profile</span>
                 <div className="flex flex-col">
                   <span aria-hidden="true">{session.user.name}</span>
-                  <span className="text-xs" aria-hidden="true">
+                  <span className="text-xs text-gray-400" aria-hidden="true">
                     {session.user.email}
                   </span>
                 </div>

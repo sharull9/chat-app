@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Badge } from "./ui/badge";
 import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
   friends: User[];

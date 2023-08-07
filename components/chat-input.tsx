@@ -2,19 +2,41 @@
 import React, { useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { Button } from "./ui/button";
-import { text } from "stream/consumers";
+import { Loader2 } from "lucide-react";
+import axios from "axios";
+import { useToast } from "./ui/use-toast";
 
-type Props = { chatPartner: User };
+type Props = { chatPartner: User; id: string };
 
-export default function ChatInput({ chatPartner }: Props) {
+export default function ChatInput({ chatPartner, id }: Props) {
+  const { toast } = useToast();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [input, setInput] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const sendMessage = () => {};
+  const sendMessage = async () => {
+    setIsLoading(true);
+
+    try {
+      await axios.post("/api/friends/send", {
+        text: input,
+        id,
+      });
+      setInput("");
+      textareaRef.current?.focus();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "Something went wrong. Please try again later.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <div className="border-t border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
-      <div className="relative flex-1 overflow-hidden rounded-lg shadow-sm ring-1 ring-inset focus-within:ring-2 focus-within:ring-indigo-600">
+    <div className="border-t border-gray-200 px-0 pt-4 mb-2 sm:mb-0">
+      <div className="relative flex-1 rounded-lg shadow-sm z-0">
         <TextareaAutosize
           ref={textareaRef}
           onKeyDown={(e) => {
@@ -27,21 +49,22 @@ export default function ChatInput({ chatPartner }: Props) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={`Message ${chatPartner.name}`}
-          className="block w-full resize-none border-0 bg-transparent placeholder:text-gray-400 focus:ring-0 sm:leading-6"
+          className="block w-full resize-none p-3 border-0 rounded-lg bg-transparent placeholder:text-gray-400 focus:ring-0 sm:leading-6 ring-2 ring-inset focus-within:ring-2 focus-within:ring-indigo-600"
         />
-        <div className="absolute right-0 bottom-0 top-0">
-          <Button
-            onClick={() => {
-              textareaRef.current?.focus();
-            }}
-            aria-hidden="true"
-            variant={"outline"}
-          >
+        {/* <div className="py-2" onClick={() => textareaRef.current?.focus()}>
+          <div className="py-8">
+            <div className="h-9"></div>
+          </div>
+        </div> */}
+        <div className="absolute right-1 bottom-1 top-1">
+          <Button onClick={sendMessage} aria-hidden="true" variant={"outline"}>
             Send
+            {isLoading ? (
+              <Loader2 className="ml-1 h-4 w-4 animate-spin" />
+            ) : null}
           </Button>
         </div>
       </div>
-      ChatInput
     </div>
   );
 }

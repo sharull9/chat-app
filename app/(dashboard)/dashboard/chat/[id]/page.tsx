@@ -55,9 +55,7 @@ export default async function page({ params }: Props) {
 
   return (
     <div className="p-5 w-full flex flex-col justify-between flex-1 h-full max-h-[calc(100vh - 6rem)]">
-      {id}
-
-      <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
+      <div className="flex sm:items-center justify-between pb-3 border-b-2 border-gray-200">
         <div className="relative flex items-center space-x-4">
           <div className="relative">
             <div className="relative w-8 h-8 sm:w-12 sm:h-12">
@@ -66,7 +64,7 @@ export default async function page({ params }: Props) {
                 src={chatPartner.image}
                 referrerPolicy="no-referrer"
                 alt={`${chatPartner.name} profile picture`}
-                className="rounded-full"
+                className="rounded-lg"
               />
             </div>
           </div>
@@ -83,8 +81,7 @@ export default async function page({ params }: Props) {
         sessionId={session.user.id}
         initialMessages={initialMessages}
       />
-
-      <ChatInput chatPartner={chatPartner} />
+      <ChatInput id={id} chatPartner={chatPartner} />
     </div>
   );
 }

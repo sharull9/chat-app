@@ -13,7 +13,6 @@ export async function fetchRedis(
     headers: {
       Authorization: `Bearer ${upstashRedishRestToken}`,
     },
-    cache: "no-store",
   });
 
   if (!response.ok) {
