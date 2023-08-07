@@ -2,15 +2,27 @@
 import { cn } from "@/lib/utils";
 import { Message } from "@/lib/validations/message";
 import React, { useRef, useState } from "react";
+import { format } from "date-fns";
+import Image from "next/image";
 
 type Props = {
   initialMessages: Message[];
-  sessionId: string;
+  userId: string | null | undefined;
+  userImage: string | null | undefined;
+  chatPartner: User;
 };
 
-export default function ChatMessages({ initialMessages, sessionId }: Props) {
+export default function ChatMessages({
+  initialMessages,
+  userId,
+  userImage,
+  chatPartner,
+}: Props) {
   const scrollDownRef = useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const formatTimeStamp = (timestamp: number) => {
+    return format(timestamp, "HH:mm");
+  };
   return (
     <div
       id="message"
@@ -18,7 +30,7 @@ export default function ChatMessages({ initialMessages, sessionId }: Props) {
     >
       <div ref={scrollDownRef} />
       {messages.map((message, index) => {
-        const isCurrentUser = message.senderId === sessionId;
+        const isCurrentUser = message.senderId === userId;
         const hasNextMessageFromSameUser =
           messages[index - 1]?.senderId == messages[index].senderId;
         return (
@@ -54,8 +66,32 @@ export default function ChatMessages({ initialMessages, sessionId }: Props) {
                   )}
                 >
                   {message.text}{" "}
-                  <span className="text-sm ml-2">{message.timestamp}</span>
+                  <span className="text-sm ml-2">
+                    {formatTimeStamp(message.timestamp)}
+                  </span>
                 </span>
+              </div>
+              <div
+                className={cn("relative w-6 h-6", {
+                  "order-2": isCurrentUser,
+                  "order-1": !isCurrentUser,
+                  invisible: hasNextMessageFromSameUser,
+                })}
+              >
+                <Image
+                  fill
+                  src={
+                    isCurrentUser ? (userImage as string) : chatPartner.image
+                  }
+                  className={cn("border", {
+                    "rounded-e-md rounded-tl-md border-indigo-600":
+                      isCurrentUser,
+                    "rounded-s-md rounded-tr-md border-gray-600":
+                      !isCurrentUser,
+                  })}
+                  alt={`profile picture`}
+                  referrerPolicy="no-referrer"
+                />
               </div>
             </div>
           </div>

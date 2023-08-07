@@ -1,6 +1,8 @@
 import { fetchRedis } from "@/helpers/redis";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/database";
+import { pusherServer } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
 import { addFriendVaidator } from "@/lib/validations/add-friend";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -60,7 +62,17 @@ export async function POST(request: Request) {
       );
     }
 
-    db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id);
+
+    pusherServer.trigger(
+      toPusherKey(`user:${idToAdd}:incoming_friend_requests`),
+      "incoming_friend_requests",
+      {
+        senderId: session.user.id,
+        senderEmail: session.user.email,
+      }
+    );
+
+    await db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id);
 
     return NextResponse.json({ status: "good" });
   } catch (err) {
