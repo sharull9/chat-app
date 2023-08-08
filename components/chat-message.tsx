@@ -40,7 +40,7 @@ export default function ChatMessages({
       pusherClient.unsubscribe(toPusherKey(`chat:${id}:messages`));
       pusherClient.unbind("incoming_messages", messageHandler);
     };
-  }, []);
+  }, [id]);
   return (
     <div
       id="message"

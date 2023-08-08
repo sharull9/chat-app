@@ -30,8 +30,6 @@ export default async function page({}: Props) {
       };
     })
   );
-
-  console.log(incomingFriendRequests);
   return (
     <main className="p-5 w-full">
       <h1 className="font-bold text-4xl mb-8">Friend Requests</h1>

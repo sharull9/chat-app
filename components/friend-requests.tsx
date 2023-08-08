@@ -37,14 +37,14 @@ export default function FriendRequestsOptions({
       );
       pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
     };
-  }, []);
+  }, [sessionId]);
 
   return (
     <Link
       href={"/dashboard/requests"}
-      className="hover:text-indigo-600 hover:bg-gray-50 w-full group flex gap-3 rounded-md p-2 text-sm leading-6 font-semibold"
+      className="hover:text-indigo-600 hover:bg-gray-50 dark:hover:bg-slate-700 dark:hover:text-indigo-200 w-full group flex gap-3 rounded-md p-2 text-sm leading-6 font-semibold"
     >
-      <div className="border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium">
+      <div className="border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium">
         <User className="w-4 h-4" />
       </div>
       <p className="truncate">Friend requests</p>
@@ -94,7 +94,7 @@ export function FriendsRequest({
       );
       pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
     };
-  }, []);
+  }, [sessionId]);
 
   const acceptFriend = async (senderId: string) => {
     await axios.post("/api/friends/accept", {

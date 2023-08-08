@@ -16,9 +16,7 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 
-type Props = {};
-
-export default function page({}: Props) {
+export default function Page() {
   const { toast } = useToast();
   const [isLoadingGoogle, setIsLoadingGoogle] = useState<boolean>(false);
   const [isLoadingGithub, setIsLoadingGithub] = useState<boolean>(false);

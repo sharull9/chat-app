@@ -37,7 +37,6 @@ async function getChatMessage(id: string) {
 }
 
 export default async function page({ params }: Props) {
-  await new Promise((resolve) => setTimeout(resolve, 60000));
   const { id } = params;
   const session = await getServerSession(authOptions);
   if (!session) notFound();

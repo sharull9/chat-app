@@ -24,6 +24,7 @@ export default function FriendList({ friends, sessionId }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const [unseenMessages, setUnseenMessages] = useState<Message[]>([]);
+  const [friendsList, setFriendsList] = useState<User[]>(friends);
 
   useEffect(() => {
     const newMessage = (message: ExtendedMessage) => {
@@ -46,8 +47,8 @@ export default function FriendList({ friends, sessionId }: Props) {
 
       setUnseenMessages((prev) => [...prev, message]);
     };
-    const newFriend = () => {
-      router.refresh();
+    const newFriend = ({ friend }: { friend: User }) => {
+      setFriendsList((prev) => [...prev, friend]);
     };
 
     pusherClient.subscribe(toPusherKey(`user:${sessionId}:chats`));
@@ -58,8 +59,11 @@ export default function FriendList({ friends, sessionId }: Props) {
     return () => {
       pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:chats`));
       pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:friends`));
+      pusherClient.unbind(toPusherKey(`new_message`), newMessage);
+      pusherClient.unbind(toPusherKey(`new_friend`), newFriend);
     };
   }, [pathname, sessionId, router]);
+
   useEffect(() => {
     if (pathname.includes("chat")) {
       setUnseenMessages((prev) => {
@@ -70,37 +74,37 @@ export default function FriendList({ friends, sessionId }: Props) {
   return (
     <ul
       role="list"
-      className="flex flex-1 max-h-96 overflow-y-auto space-y-1 -mx-2 flex-col gap-y-7"
+      className="flex flex-1 max-h-96 overflow-y-auto space-y-1 -mx-2 flex-col"
     >
-      {friends.sort().map((friend) => {
+      {friendsList.sort().map((friend) => {
         const unseenMessagesCount = unseenMessages.filter((unseenMessage) => {
           return unseenMessage.senderId === friend.id;
         }).length;
         return (
-          <li key={friend.id}>
+          <li key={friend?.id}>
             <a
               href={`/dashboard/chat/${ChatAhrefConstructor(
                 sessionId,
-                friend.id
+                friend?.id
               )}`}
-              className="items-center hover:text-indigo-600 hover:bg-gray-50 w-full group flex gap-3 rounded-md p-2 text-sm leading-6 font-semibold"
+              className="items-center hover:text-indigo-600 hover:bg-gray-50 dark:hover:bg-slate-700 dark:hover:text-indigo-200 w-full group flex gap-3 rounded-md p-2 text-sm leading-6 font-semibold"
             >
-              <span className="group-hover:border-indigo-600 group-hover:text-indigo-600 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium">
+              <span className="group-hover:border-indigo-600 dark:group-hover:text-indigo-200 group-hover:text-indigo-400 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium">
                 <div className="relative h-6 w-6">
                   <Image
                     fill
                     referrerPolicy="no-referrer"
                     className="rounded-md group-hover:border group-hover:border-indigo-600"
-                    src={friend.image}
-                    alt={friend.name || "profile picture"}
+                    src={friend?.image}
+                    alt={friend?.name || "profile picture"}
                   />
                 </div>
               </span>
-              <p className="font-semibold truncate hover:text-indigo-600">
-                {friend.name}
+              <p className="font-semibold truncate hover:text-indigo-600 dark:hover:bg-slate-700 dark:hover:text-indigo-200">
+                {friend?.name}
               </p>
               {unseenMessagesCount > 0 ? (
-                <Badge className="group-hover:text-indigo-600 group-hover:border-indigo-600">
+                <Badge className="group-hover:text-indigo-600 group-hover:border-indigo-600 dark:group-hover:text-indigo-400">
                   {unseenMessagesCount}
                 </Badge>
               ) : (
