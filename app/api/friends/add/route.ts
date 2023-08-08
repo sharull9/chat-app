@@ -62,7 +62,6 @@ export async function POST(request: Request) {
       );
     }
 
-
     pusherServer.trigger(
       toPusherKey(`user:${idToAdd}:incoming_friend_requests`),
       "incoming_friend_requests",
@@ -74,7 +73,7 @@ export async function POST(request: Request) {
 
     await db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id);
 
-    return NextResponse.json({ status: "good" });
+    return NextResponse.json({ message: "Send request" }, { status: 200 });
   } catch (err) {
     if (err instanceof z.ZodError) {
       return NextResponse.json(

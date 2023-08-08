@@ -20,6 +20,25 @@ export default function FriendRequestsOptions({
 }: FriendRequestsOptionsProps) {
   const [requestCount, setRequestCount] = useState<number>(initialRequestCount);
 
+  useEffect(() => {
+    const friendRequestHandler = () => {
+      setRequestCount((prev) => prev + 1);
+    };
+
+    pusherClient.subscribe(
+      toPusherKey(`user:${sessionId}:incoming_friend_requests`)
+    );
+
+    pusherClient.bind("incoming_friend_requests", friendRequestHandler);
+
+    return () => {
+      pusherClient.unsubscribe(
+        toPusherKey(`user:${sessionId}:incoming_friend_requests`)
+      );
+      pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
+    };
+  }, []);
+
   return (
     <Link
       href={"/dashboard/requests"}
@@ -55,20 +74,26 @@ export function FriendsRequest({
     incomingFriendRequest
   );
 
-  const friendRequestHandler = () => {
-    console.log("hello");
-  };
-
   useEffect(() => {
+    const friendRequestHandler = ({
+      senderId,
+      senderEmail,
+    }: IncomingFriendRequest) => {
+      setFriendRequest((prev) => [...prev, { senderId, senderEmail }]);
+    };
+
     pusherClient.subscribe(
       toPusherKey(`user:${sessionId}:incoming_friend_requests`)
     );
 
     pusherClient.bind("incoming_friend_requests", friendRequestHandler);
-    pusherClient.unsubscribe(
-      toPusherKey(`user:${sessionId}:incoming_friend_requests`)
-    );
-    pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
+
+    return () => {
+      pusherClient.unsubscribe(
+        toPusherKey(`user:${sessionId}:incoming_friend_requests`)
+      );
+      pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
+    };
   }, []);
 
   const acceptFriend = async (senderId: string) => {

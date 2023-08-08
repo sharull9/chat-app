@@ -5,10 +5,19 @@ import React, { useEffect, useState } from "react";
 import { Badge } from "./ui/badge";
 import Image from "next/image";
 import Link from "next/link";
+import { pusherClient } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
+import ChatNotification from "./chat-notification";
+import { toast } from "react-hot-toast";
 
 type Props = {
   friends: User[];
   sessionId: string;
+};
+
+type ExtendedMessage = Message & {
+  senderImage: string;
+  senderName: string;
 };
 
 export default function FriendList({ friends, sessionId }: Props) {
@@ -16,6 +25,41 @@ export default function FriendList({ friends, sessionId }: Props) {
   const pathname = usePathname();
   const [unseenMessages, setUnseenMessages] = useState<Message[]>([]);
 
+  useEffect(() => {
+    const newMessage = (message: ExtendedMessage) => {
+      const shouldNotify =
+        pathname !==
+        `/dashboard/chat/${ChatAhrefConstructor(sessionId, message.senderId)}`;
+
+      if (!shouldNotify) return;
+
+      toast.custom((t) => (
+        <ChatNotification
+          t={t}
+          sessionId={sessionId}
+          senderId={message.senderId}
+          senderImage={message.senderImage}
+          senderMessage={message.text}
+          senderName={message.senderName}
+        />
+      ));
+
+      setUnseenMessages((prev) => [...prev, message]);
+    };
+    const newFriend = () => {
+      router.refresh();
+    };
+
+    pusherClient.subscribe(toPusherKey(`user:${sessionId}:chats`));
+    pusherClient.subscribe(toPusherKey(`user:${sessionId}:friends`));
+    pusherClient.bind(toPusherKey(`new_message`), newMessage);
+    pusherClient.bind(toPusherKey(`new_friend`), newFriend);
+
+    return () => {
+      pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:chats`));
+      pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:friends`));
+    };
+  }, []);
   useEffect(() => {
     if (pathname.includes("chat")) {
       setUnseenMessages((prev) => {
