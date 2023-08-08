@@ -32,12 +32,12 @@ export default function ChatMessages({
       setMessages((prev) => [message, ...prev]);
     };
 
-    pusherClient.subscribe(toPusherKey(`chat:${id}`));
+    pusherClient.subscribe(toPusherKey(`chat:${id}:messages`));
 
     pusherClient.bind("incoming_messages", messageHandler);
 
     return () => {
-      pusherClient.unsubscribe(toPusherKey(`chat:${id}`));
+      pusherClient.unsubscribe(toPusherKey(`chat:${id}:messages`));
       pusherClient.unbind("incoming_messages", messageHandler);
     };
   }, []);

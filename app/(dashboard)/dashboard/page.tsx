@@ -5,5 +5,10 @@ type Props = {};
 
 export default async function page({}: Props) {
   const session = await getServerSession(authOptions);
-  return <div>{/* <pre>{JSON.stringify(session)}</pre> */}</div>;
+  return (
+    <div>
+      {/* <pre>{JSON.stringify(session)}</pre> */}
+      
+    </div>
+  );
 }
