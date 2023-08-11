@@ -47,7 +47,7 @@ export default function FriendList({ friends, sessionId }: Props) {
 
       setUnseenMessages((prev) => [...prev, message]);
     };
-    const newFriend = ({ friend }: { friend: User }) => {
+    const newFriend = (friend: User) => {
       setFriendsList((prev) => [...prev, friend]);
     };
 
