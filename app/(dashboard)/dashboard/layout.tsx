@@ -59,7 +59,7 @@ export default async function RootLayout({
         <div className="hidden md:flex justify-between items-center">
           <Link href={"/dashboard"}>SHARULL</Link>
         </div>
-        <div>
+        <div className="flex-grow">
           {friends.length > 0 ? (
             <div className="text-xs font-semibold leading-6 text-gray-400">
               Your Chats
@@ -68,8 +68,11 @@ export default async function RootLayout({
             ""
           )}
 
-          <nav className="flex flex-1 flex-col">
-            <ul role="list" className="flex flex-1 flex-col gap-y-7">
+          <nav className="flex flex-1 flex-col min-h-[100%]">
+            <ul
+              role="list"
+              className="flex flex-1 flex-col gap-y-7 min-h-[100%] pb-4"
+            >
               <li>
                 <FriendList sessionId={session.user.id} friends={friends} />
               </li>
