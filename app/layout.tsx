@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ToasterUI } from "@/components/ui/toaster";
 import { Toaster } from "react-hot-toast";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" enableSystem>
           {children}
+          <Analytics />
           <ToasterUI />
           <Toaster position="top-center" reverseOrder={false} />
         </ThemeProvider>
