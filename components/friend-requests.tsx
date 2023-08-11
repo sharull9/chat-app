@@ -24,18 +24,25 @@ export default function FriendRequestsOptions({
     const friendRequestHandler = () => {
       setRequestCount((prev) => prev + 1);
     };
+    const addedFriendHandler = () => {
+      setRequestCount((prev) => prev - 1);
+    };
 
     pusherClient.subscribe(
       toPusherKey(`user:${sessionId}:incoming_friend_requests`)
     );
+    pusherClient.subscribe(toPusherKey(`user:${sessionId}:friends`));
 
     pusherClient.bind("incoming_friend_requests", friendRequestHandler);
+    pusherClient.bind("new_friend", addedFriendHandler);
 
     return () => {
       pusherClient.unsubscribe(
         toPusherKey(`user:${sessionId}:incoming_friend_requests`)
       );
+      pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:friends`));
       pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
+      pusherClient.unbind("new_friend", addedFriendHandler);
     };
   }, [sessionId]);
 
