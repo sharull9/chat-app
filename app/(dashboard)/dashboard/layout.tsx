@@ -47,7 +47,7 @@ export default async function RootLayout({
 
   return (
     <div className="w-full flex h-screen flex-col md:flex-row">
-      <div className="px-8 pt-4">
+      <div className="px-8 pt-4 md:hidden">
         <Sidebar
           sidebarOptions={sidebarOptions}
           session={session}
@@ -55,7 +55,7 @@ export default async function RootLayout({
           friends={friends}
         />
       </div>
-      <div className="flex absolute top-14 h-full w-full max-w-sm grow flex-col bg-card -translate-x-full md:translate-x-0 gap-y-5 p-5 overflow-x-hidden overflow-y-auto border-r border-gray-200">
+      <div className="flex h-full w-full max-w-sm grow flex-col bg-card gap-y-5 p-5 overflow-x-hidden overflow-y-auto border-r border-gray-200">
         <div className="hidden md:flex justify-between items-center">
           <Link href={"/dashboard"}>SHARULL</Link>
         </div>
