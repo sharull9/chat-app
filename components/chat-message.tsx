@@ -44,7 +44,7 @@ export default function ChatMessages({
   return (
     <div
       id="message"
-      className="flex h-full flex-1 flex-col-reverse gap-4 py-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrollbar-h-2 scrolling-touch"
+      className="flex md:hidden h-full flex-1 flex-col-reverse gap-4 py-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrollbar-h-2 scrolling-touch"
     >
       <div ref={scrollDownRef} />
       {messages.map((message, index) => {
