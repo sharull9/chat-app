@@ -55,8 +55,8 @@ export default async function RootLayout({
           friends={friends}
         />
       </div>
-      <div className="flex h-full w-full max-w-sm grow flex-col bg-card gap-y-5 p-5 overflow-x-hidden overflow-y-auto border-r border-gray-200">
-        <div className="hidden md:flex justify-between items-center">
+      <div className="hidden md:flex h-full w-full max-w-sm grow flex-col bg-card gap-y-5 p-5 overflow-x-hidden overflow-y-auto border-r border-gray-200">
+        <div className="flex justify-between items-center">
           <Link href={"/dashboard"}>SHARULL</Link>
         </div>
         <div className="flex-grow">

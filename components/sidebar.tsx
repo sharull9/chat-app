@@ -62,8 +62,8 @@ export default function Sidebar({
                       <div className="flex h-full flex-col overflow-hidden bg-white dark:bg-slate-900 py-6 shadow-xl">
                         <div className="px-4 sm:px-6">
                           <div className="flex items-start justify-between">
-                            <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
-                              Dashboard
+                            <Dialog.Title className="text-base font-semibold leading-6">
+                              <Link href={"/dashboard"}>SHARULL</Link>
                             </Dialog.Title>
                             <div className="ml-3 flex h-7 items-center">
                               <button
@@ -89,7 +89,7 @@ export default function Sidebar({
                           <nav className="flex flex-1 flex-col min-h-[100%]">
                             <ul
                               role="list"
-                              className="flex flex-1 flex-col gap-y-7 min-h-[100%] pb-8"
+                              className="flex flex-1 flex-col gap-y-7 min-h-[100%] pb-4"
                             >
                               <li>
                                 <FriendList
