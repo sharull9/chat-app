@@ -47,7 +47,7 @@ export default async function RootLayout({
 
   return (
     <div className="w-full flex h-screen flex-col md:flex-row">
-      <div className="px-8 pt-4 md:hidden">
+      <div className="px-8 pt-4 md:hidden h-[58px]">
         <Sidebar
           sidebarOptions={sidebarOptions}
           session={session}
